@@ -81,7 +81,7 @@ async def regisztracio(data: UserCreate, db: Session = Depends(get_session)):
         birth_date=data.birth_date,
         username=data.username,
     )
-    db_user.jelszo_hash = Hasher.get_password_hash(data.password)
+    db_user.password_hash = Hasher.get_password_hash(data.password)
     db.add(db_user)
     db.commit()
     return db_user
