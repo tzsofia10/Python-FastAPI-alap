@@ -1,0 +1,88 @@
+from fastapi import APIRouter, Depends, HTTPException, status, Cookie
+from sqlmodel import select, Session, delete
+from  ..database import get_session
+from ..models.user import User, UserPublic, UserCreate, UserUpdate
+from ..utils.auth import Token, LoginData, authenticate_user, get_current_user, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
+from typing import Annotated
+from datetime import datetime, timezone, timedelta
+from ..utils.hashing import Hasher
+
+#from ..dependencies import get_token_header
+
+router = APIRouter(
+    prefix="/userek",
+    tags=["userek"],
+    dependencies=[],
+    responses={404: {"description": "Not found"}},
+)
+
+@router.get("/",response_model=list[UserPublic])
+async def get_userek(db: Session = Depends(get_session)):
+    data = db.exec(select(User)).unique()
+    return data
+
+@router.get("/en", response_model=UserPublic)
+async def user_en(
+    current_user: Annotated[User, Depends(get_current_user)],
+):
+    return current_user
+
+@router.get("/{user_id}",response_model=UserPublic)
+async def get_user(user_id: int, db: Session = Depends(get_session)):
+    data = db.get(User, user_id)
+    if not data:
+        raise HTTPException(status_code=404, detail="Az adott felhasználó nem található")
+    return data
+
+
+@router.delete("/{user_id}")
+def delete_user(user_id: int,  db: Session = Depends(get_session)):
+    user = db.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="Az adott felhasználó nem található")
+    db.delete(cim)
+    db.delete(user)
+    db.commit()
+    return {"ok": True}
+
+@router.put("/{user_id}", response_model=UserPublic)
+def update_user(user_id: int, user: UserUpdate, db: Session = Depends(get_session)):
+    db_user = db.get(User, user_id)
+    if not db_user:
+        raise HTTPException(status_code=404, detail="Az adott felhasználó nem található")
+    user_data = User(
+        id=user_id
+    )
+    user_data.sqlmodel_update(user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+
+@router.post("/login", response_model=Token)
+async def login_for_access_token(login_data: LoginData, session: Session = Depends(get_session)) -> Token:
+    user = authenticate_user(session, login_data.felhasznalonev, login_data.jelszo)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user.felhasznalonev}, expires_delta=access_token_expires
+    )
+    return Token(access_token=access_token, token_type="bearer")
+
+@router.post("/register/", response_model=UserPublic)
+async def regisztracio(data: UserCreate, db: Session = Depends(get_session)):
+    db_user = User(
+        name=data.name,
+        email=data.email,
+        birth_date=data.birth_date,
+        username=data.username,
+    )
+    db_user.jelszo_hash = Hasher.get_password_hash(data.password)
+    db.add(db_user)
+    db.commit()
+    return db_user
