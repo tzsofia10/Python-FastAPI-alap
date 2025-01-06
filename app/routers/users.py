@@ -10,8 +10,8 @@ from ..utils.hashing import Hasher
 #from ..dependencies import get_token_header
 
 router = APIRouter(
-    prefix="/userek",
-    tags=["userek"],
+    prefix="/users",
+    tags=["users"],
     dependencies=[],
     responses={404: {"description": "Not found"}},
 )
@@ -21,7 +21,7 @@ async def get_userek(db: Session = Depends(get_session)):
     data = db.exec(select(User)).unique()
     return data
 
-@router.get("/en", response_model=UserPublic)
+@router.get("/me", response_model=UserPublic)
 async def user_en(
     current_user: Annotated[User, Depends(get_current_user)],
 ):
