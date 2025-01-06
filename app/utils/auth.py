@@ -2,7 +2,7 @@ from .hashing import Hasher
 from typing import Annotated
 from fastapi import Cookie, HTTPException, Depends, status, Header
 from sqlmodel import Session, select
-from ..models.szemely import Szemely
+from ..models.user import User
 import os
 from dotenv import load_dotenv
 from datetime import datetime, timezone, timedelta
@@ -35,12 +35,12 @@ class LoginData(BaseModel):
     felhasznalonev: str
     jelszo: str
 
-def authenticate_user(session: Session, username: str, password: str) -> Szemely:
-    query = select(Szemely).where(Szemely.felhasznalonev == username)
+def authenticate_user(session: Session, username: str, password: str) -> User:
+    query = select(User).where(User.username == username)
     user = session.exec(query).unique().first()
     if not user:
         return False
-    if not Hasher.verify_password(password, user.jelszo_hash):
+    if not Hasher.verify_password(password, user.password_hash):
         return False
     return user
 
@@ -57,7 +57,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None) -> s
     return encoded_jwt
 
 
-async def get_current_user(authorization: Annotated[str | None, Header()] = None, authtoken: Annotated[str | None, Cookie()] = None, session: Session = Depends(get_session)) -> Szemely:
+async def get_current_user(authorization: Annotated[str | None, Header()] = None, authtoken: Annotated[str | None, Cookie()] = None, session: Session = Depends(get_session)) -> User:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -73,7 +73,7 @@ async def get_current_user(authorization: Annotated[str | None, Header()] = None
             raise credentials_exception
     except InvalidTokenError as e:
         raise credentials_exception
-    query = select(Szemely).where(Szemely.felhasznalonev == username)
+    query = select(User).where(User.username == username)
     user = session.exec(query).unique().first()
     if user is None:
        raise credentials_exception

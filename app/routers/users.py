@@ -40,7 +40,6 @@ def delete_user(user_id: int,  db: Session = Depends(get_session)):
     user = db.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="Az adott felhasználó nem található")
-    db.delete(cim)
     db.delete(user)
     db.commit()
     return {"ok": True}
@@ -70,7 +69,7 @@ async def login_for_access_token(login_data: LoginData, session: Session = Depen
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.felhasznalonev}, expires_delta=access_token_expires
+        data={"sub": user.username}, expires_delta=access_token_expires
     )
     return Token(access_token=access_token, token_type="bearer")
 
