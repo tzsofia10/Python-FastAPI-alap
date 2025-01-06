@@ -6,11 +6,11 @@ class UserBase(SQLModel):
     name: str = Field(max_length=128)
     email: str = Field(max_length=128)
     birth_date: date
-    username: Optional[str] = Field(default=None, max_length=64)
+    username: str = Field(default=None, max_length=64)
    
 class User(UserBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    password_hash: Optional[str] = Field(default=None, max_length=128)
+    password_hash: str = Field(default=None, max_length=256)
    
 class UserPublicSmall(UserBase):
     id: Optional[int]
