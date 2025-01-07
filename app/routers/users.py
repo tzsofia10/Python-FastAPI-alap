@@ -73,7 +73,7 @@ async def login_for_access_token(login_data: LoginData, session: Session = Depen
     )
     return Token(access_token=access_token, token_type="bearer")
 
-@router.post("/register", response_model=UserPublic)
+@router.post("/register", response_model=LoginData)
 async def regisztracio(data: UserCreate, db: Session = Depends(get_session)):
     db_user = User(
         username=data.username,
@@ -81,4 +81,8 @@ async def regisztracio(data: UserCreate, db: Session = Depends(get_session)):
     db_user.password_hash = Hasher.get_password_hash(data.password)
     db.add(db_user)
     db.commit()
-    return db_user
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": db_user.username}, expires_delta=access_token_expires
+    )
+    return Token(access_token=access_token, token_type="bearer")
