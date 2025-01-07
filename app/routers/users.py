@@ -75,6 +75,13 @@ async def login_for_access_token(login_data: LoginData, session: Session = Depen
 
 @router.post("/register", response_model=LoginData)
 async def regisztracio(data: UserCreate, db: Session = Depends(get_session)):
+    user = db.exec(select(User).where(User.username == data.username)).first()
+    if user is not None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="This username is unavailable",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     db_user = User(
         username=data.username,
     )
