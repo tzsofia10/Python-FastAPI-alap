@@ -8,8 +8,8 @@ class UserBase(SQLModel):
 class User(UserBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     password_hash: str = Field(default=None, max_length=256)
-    high_score: int
-    json_save: str
+    high_score: Optional[int]
+    json_save: Optional[str]
    
 class UserPublicSmall(UserBase):
     id: Optional[int]
