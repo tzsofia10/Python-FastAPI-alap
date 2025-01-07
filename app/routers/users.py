@@ -76,10 +76,9 @@ async def login_for_access_token(login_data: LoginData, session: Session = Depen
 @router.post("/register", response_model=UserPublic)
 async def regisztracio(data: UserCreate, db: Session = Depends(get_session)):
     db_user = User(
-        name=data.name,
-        email=data.email,
-        birth_date=data.birth_date,
         username=data.username,
+        high_score=data.high_score,
+        json_save=data.json_save
     )
     db_user.password_hash = Hasher.get_password_hash(data.password)
     db.add(db_user)

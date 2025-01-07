@@ -3,10 +3,9 @@ from typing import Optional
 from datetime import date
 
 class UserBase(SQLModel):
-    name: str = Field(max_length=128)
-    email: str = Field(max_length=128)
-    birth_date: date
     username: str = Field(default=None, max_length=64)
+    high_score: int
+    json_save: str
    
 class User(UserBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
