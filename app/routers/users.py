@@ -73,7 +73,7 @@ async def login_for_access_token(login_data: LoginData, session: Session = Depen
     )
     return Token(access_token=access_token, token_type="bearer")
 
-@router.post("/register", response_model=LoginData)
+@router.post("/register", response_model=Token)
 async def regisztracio(data: UserCreate, db: Session = Depends(get_session)):
     user = db.exec(select(User).where(User.username == data.username)).first()
     if user is not None:
