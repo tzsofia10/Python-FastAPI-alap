@@ -13,8 +13,8 @@ class User(UserBase, table=True):
    
 class UserPublicSmall(UserBase):
     id: Optional[int]
-    high_score: int
-    json_save: str
+    high_score: Optional[int]
+    json_save: Optional[str]
 
 class UserPublic(UserPublicSmall):
     pass
