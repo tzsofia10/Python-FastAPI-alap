@@ -77,8 +77,6 @@ async def login_for_access_token(login_data: LoginData, session: Session = Depen
 async def regisztracio(data: UserCreate, db: Session = Depends(get_session)):
     db_user = User(
         username=data.username,
-        high_score=data.high_score,
-        json_save=data.json_save
     )
     db_user.password_hash = Hasher.get_password_hash(data.password)
     db.add(db_user)
