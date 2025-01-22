@@ -60,7 +60,7 @@ def update_user(user_id: int, user: UserUpdate, db: Session = Depends(get_sessio
 
 @router.post("/login", response_model=Token)
 async def login_for_access_token(login_data: LoginData, session: Session = Depends(get_session)) -> Token:
-    user = authenticate_user(session, login_data.felhasznalonev, login_data.jelszo)
+    user = authenticate_user(session, login_data.username, login_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

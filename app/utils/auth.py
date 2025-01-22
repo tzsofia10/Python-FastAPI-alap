@@ -32,8 +32,8 @@ class Token(BaseModel):
     token_type: str
 
 class LoginData(BaseModel):
-    felhasznalonev: str
-    jelszo: str
+    username: str
+    password: str
 
 def authenticate_user(session: Session, username: str, password: str) -> User:
     query = select(User).where(User.username == username)
