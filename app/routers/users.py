@@ -53,6 +53,7 @@ def update_user(user_id: int, user: UserUpdate, db: Session = Depends(get_sessio
         id=user_id
     )
     user_data.sqlmodel_update(user)
+    db.add(user_data)
     db.commit()
     db.refresh(db_user)
     return db_user
