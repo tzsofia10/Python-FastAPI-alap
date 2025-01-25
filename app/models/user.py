@@ -23,4 +23,6 @@ class UserCreate(UserBase):
     password: str
 
 class UserUpdate(UserBase):
-    pass
+    password_hash: str
+    high_score: Optional[int]
+    json_save: Optional[str]
