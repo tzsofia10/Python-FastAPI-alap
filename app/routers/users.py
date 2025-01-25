@@ -49,12 +49,8 @@ def update_user(user_id: int, user: UserUpdate, db: Session = Depends(get_sessio
     db_user = db.get(User, user_id)
     if not db_user:
         raise HTTPException(status_code=404, detail="Az adott felhasználó nem található")
-    user_data = User(
-        id=user_id,
-        password_hash=db_user.password_hash
-    )
-    user_data.sqlmodel_update(user)
-    db.add(user_data)
+    db_user.sqlmodel_update(user)
+    db.add(db_user)
     db.commit()
     db.refresh(db_user)
     return db_user
