@@ -9,12 +9,12 @@ class User(UserBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     password_hash: str = Field(default=None, max_length=256)
     high_score: Optional[int]
-    json_save: Optional[str]
+    json_save: str
    
 class UserPublicSmall(UserBase):
     id: Optional[int]
     high_score: Optional[int]
-    json_save: Optional[str]
+    json_save: str
 
 class UserPublic(UserPublicSmall):
     pass
@@ -24,4 +24,4 @@ class UserCreate(UserBase):
 
 class UserUpdate(UserBase):
     high_score: Optional[int]
-    json_save: Optional[str]
+    json_save: str

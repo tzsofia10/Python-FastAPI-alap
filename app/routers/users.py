@@ -82,6 +82,7 @@ async def regisztracio(data: UserCreate, db: Session = Depends(get_session)):
         )
     db_user = User(
         username=data.username,
+        json_save=""
     )
     db_user.password_hash = Hasher.get_password_hash(data.password)
     db.add(db_user)
