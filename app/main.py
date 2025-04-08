@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 import logging
 
 #from .dependencies import get_query_token, get_token_header
-from .routers import users
+from .routers import contents
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -17,7 +17,6 @@ origins = [
     "http://127.0.0.1:8000",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "http://j4f.teamorange.hu",
 ]
 
 app.add_middleware(
@@ -44,7 +43,7 @@ app.add_middleware(
     expose_headers=["*"],
 )
 
-app.include_router(users.router)
+app.include_router(contents.router)
 
 @app.get("/")
 async def root():

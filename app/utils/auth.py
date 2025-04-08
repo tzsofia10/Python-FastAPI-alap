@@ -2,7 +2,7 @@ from .hashing import Hasher
 from typing import Annotated
 from fastapi import Cookie, HTTPException, Depends, status, Header
 from sqlmodel import Session, select
-from ..models.user import User
+from ..models.content import User
 import os
 from dotenv import load_dotenv
 from datetime import datetime, timezone, timedelta
