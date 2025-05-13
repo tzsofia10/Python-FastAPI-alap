@@ -1,8 +1,6 @@
 from sqlmodel import Session, create_engine
-from dotenv import load_dotenv
 import os
 
-load_dotenv()
 
 DB_URL = "localhost"
 DB_USER = "root"
