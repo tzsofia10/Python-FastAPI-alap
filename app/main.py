@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 import logging
 
 #from .dependencies import get_query_token, get_token_header
-from .routers import contents
+from .routers import ingatlan
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -43,7 +43,7 @@ app.add_middleware(
     expose_headers=["*"],
 )
 
-app.include_router(contents.router)
+app.include_router(ingatlan.router)
 
 @app.get("/")
 async def root():

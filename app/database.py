@@ -1,13 +1,12 @@
 from sqlmodel import Session, create_engine
-from dotenv import load_dotenv
 import os
 
-load_dotenv()
 
-DB_URL = os.getenv("DB_URL")
-DB_USER = os.getenv("DB_USER")
-DB_PASS = os.getenv("DB_PASS")
-DB_NAME = os.getenv("DB_NAME")
+
+DB_URL = "localhost"
+DB_USER = "root"
+DB_PASS = ""
+DB_NAME = "ingatlan"
 
 engine = create_engine(f"mysql+mysqldb://{DB_USER}:{DB_PASS}@{DB_URL}/{DB_NAME}", echo=True)
 
