@@ -1,0 +1,13 @@
+ha kézzel kell megirni az adatbázist akkor
+INSERT INTO kategoriak (id, nev) VALUES
+(1, 'Szépirodalom'),
+(2, 'Tudományos'),
+(3, 'Gyermek-és ifjúsági'),
+(4, 'Krimi'),
+(5, 'Fantasy'),
+(6, 'Életrajz');
+és
+INSERT INTO konyvek(id, kategoria, cim, szerzo, kiadasEve,kolcsonozheto,ar,boritoUrl,felvetelDatuma) VALUES
+(1,5,'A Gyűrűk Ura','J.R.R. Tolkien','1954',true,'3800','https://covers.com/lotr.jpg','2023-11-10')
+
+és a nagyobb táblából kötöd össze a kategoriakkal!!
